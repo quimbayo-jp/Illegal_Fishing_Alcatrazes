@@ -165,3 +165,107 @@ barplot(pcoa$eig)
 quality <-quality_funct_space_fromdist (gower_matrix,  nbdim=6,   plot=NA) 
 quality$meanSD # the minimal value corresponds to the best space to use, here 6 axes 
 Inertia_4axis <- (sum(pcoa$eig[1:4])) /(sum(pcoa$eig)) # percentage of inertia explained by the 4 first axes = 89.4%
+
+# Building the functional space
+pcoa1 <- data.frame (pcoa$li)
+pcoa1$name   <- rownames(pcoa1)
+rownames(pcoa1) <- NULL
+pcoa1$name <- gsub (" ", "_", pcoa1$name)
+
+data$presence <- 1
+db <- ddply (data,. (year, vessel, species), summarise, 
+             presence=sum(presence))
+colnames(db)[3] <- "name"
+
+db <- droplevels(db[!db$name=="nofish",])
+db <- left_join(db, pcoa1)
+
+db$COVID19 <- NA
+db$COVID19 <- ifelse (db$year <=2019, "Before", db$COVID19)
+db$COVID19 <- ifelse (db$year >2019, "During", db$COVID19)
+
+# Estimating the total functional volume captured
+hull_db <- chull(db[,5:6]) # Using the Axis 1 and 2 from the PCoA
+hull_db <- c (hull_db, hull_db[1])
+
+library(geometry)
+hull <- convhulln(db[,5:6], options = "FA")
+hull$vol
+
+# Split records between professional/amateur before COVID-19 pandemic
+# Before
+Before_COVID19 <- droplevels (db[!db$COVID19=="During", ])
+convhulln(Before_COVID19[,5:6], options = "FA")$vol
+hull_Before_COVID19 <- chull(Before_COVID19[,5:6])
+hull_Before_COVID19 <- c(hull_Before_COVID19, hull_Before_COVID19[1])
+# Before - Professional
+Before_COVID19_Professional <- droplevels (subset (Before_COVID19, vessel=="fishingvessel"))
+convhulln(Before_COVID19_Professional[,5:6], options = "FA")$vol
+hull_Before_COVID19_Professional <- chull(Before_COVID19_Professional[,5:6])
+hull_Before_COVID19_Professional <- c(hull_Before_COVID19_Professional, hull_Before_COVID19_Professional[1])
+# Before - Amateur
+Before_COVID19_Amateur <- droplevels (subset (Before_COVID19, vessel=="recreationalboat"))
+convhulln(Before_COVID19_Amateur[,5:6], options = "FA")$vol
+hull_Before_COVID19_Amateur <- chull(Before_COVID19_Amateur[,5:6])
+hull_Before_COVID19_Amateur <- c(hull_Before_COVID19_Amateur, hull_Before_COVID19_Amateur[1])
+
+# Split records between professional/amateur during COVID-19 pandemic
+# During
+During_COVID19 <- droplevels (db[!db$COVID19=="Before", ])
+convhulln(During_COVID19[,5:6], options = "FA")$vol
+hull_During_COVID19 <- chull(During_COVID19[,5:6])
+hull_During_COVID19 <- c(hull_During_COVID19, hull_During_COVID19[1])
+# During - Professional
+During_COVID19_Professional <- droplevels (subset (During_COVID19, vessel=="fishingvessel"))
+convhulln(During_COVID19_Professional[,5:6], options = "FA")$vol
+hull_During_COVID19_Professional <-chull(During_COVID19_Professional[,5:6])
+hull_During_COVID19_Professional <- c(hull_During_COVID19_Professional, hull_During_COVID19_Professional[1])
+# During - Amateur
+During_COVID19_Amateur <- droplevels (subset (During_COVID19, vessel=="recreationalboat"))
+convhulln(During_COVID19_Amateur[,5:6], options = "FA")$vol
+hull_During_COVID19_Amateur <- chull(During_COVID19_Amateur[,5:6])
+hull_During_COVID19_Amateur <- c(hull_During_COVID19_Amateur, hull_During_COVID19_Amateur[1])
+
+# Figure Functional Space using the Axis 1 and 2 from the PCoA
+FSpace_Before_Fig1b <- ggplot(db, aes(x = A1, y = A2)) +
+  labs(x="PCoA1", y="PCoA2") +
+  theme_classic2(base_family = "sans")+ 
+  theme(legend.position = "top", 
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size=15, angle=90, family = "sans"),
+        plot.title   = element_text(size = 19, face = "bold"))+ 
+  scale_size_area()+
+  geom_polygon(data=db[hull_db,], fill="#CDC7AE", alpha = 2/10, colour="black", linetype = 1) +
+  geom_polygon(data=Before_COVID19[hull_Before_COVID19,], fill="grey", alpha = 6/10, colour="black", linetype = 3) +
+  geom_polygon(data=Before_COVID19_Professional[hull_Before_COVID19_Professional,], fill="#E69F00", alpha = .7, colour="black", 
+               linetype = 1) +
+  geom_point(data = Before_COVID19_Professional, aes(x = A1, y = A2), size=6, pch=21, col="black", bg = "#E69F00") +
+  #geom_text (data=Before_COVID19_Professional[hull_Before_COVID19_Professional,], aes(label=name), hjust=0, vjust=0) +
+  geom_polygon(data=Before_COVID19_Amateur[hull_Before_COVID19_Amateur,], fill="#56B4E9", alpha = .7, colour="black", 
+               linetype = 1)+
+  geom_point(data = Before_COVID19_Amateur, aes(x = A1, y = A2), size=6, pch=21, col="black", bg = "#56B4E9")
+  #geom_text (data=Before_COVID19_Amateur[hull_Before_COVID19_Amateur,], aes(label=code), hjust=0, vjust=0) 
+
+FSpace_Before_Fig1c <-ggplot(db, aes(x = A1, y = A2)) +
+  theme_classic2(base_family = "sans")+ 
+  labs(x="PCoA1", y="PCoA2") +
+  theme(legend.position = "top", 
+        axis.title.x = element_text(size=15, angle=0, family = "sans"),
+        axis.title.y = element_text(size=15, angle=90, family = "sans"),
+        plot.title   = element_text(size = 19, face = "bold"))+ 
+  scale_size_area()+
+  geom_polygon(data=db[hull_db,], fill="#CDC7AE", alpha = 2/10, colour="black", linetype = 1) +
+  geom_polygon(data=During_COVID19[hull_During_COVID19,], fill="grey", alpha = 6/10, colour="black", linetype = 3) +
+  geom_polygon(data=During_COVID19_Professional[hull_During_COVID19_Professional,], fill="#E69F00", alpha = .7, colour="black", 
+               linetype = 1) +
+  geom_point(data = During_COVID19_Professional, aes(x = A1, y = A2), size=6, pch=21, col="black", bg = "#E69F00") +
+  #geom_text (data=During_COVID19_Professional[hull_During_COVID19_Professional,], aes(label=name), hjust=0, vjust=0) +
+  geom_polygon(data=During_COVID19_Amateur[hull_During_COVID19_Amateur,], fill="#56B4E9", alpha = .7, colour="black", 
+               linetype = 1)+
+  geom_point(data = During_COVID19_Amateur, aes(x = A1, y = A2), size=6, pch=21, col="black", bg = "#56B4E9")
+  #geom_text (data=During_COVID19_Amateur[hull_During_COVID19_Amateur,], aes(label=code), hjust=0, vjust=0) 
+
+ggarrange(FSpace_Before_Fig1b, FSpace_Before_Fig1c, 
+          ncol = 1, nrow = 2,
+          labels = c("(b)","(c)"),align = "hv")
+
