@@ -54,6 +54,99 @@ Coord_records <- data.frame (Year=pts_coordenates$year,
                              lat=pts_coordenates$lat, 
                              Distance=unlist(Dist_Alcatrazes))
 
+# Records Map ------------------------------------------
+library (rgdal)
+alcatrazes_map <- readOGR(dsn="shapefiles/islands", layer = "ilhas_e_parceis"); crs (alcatrazes_map)
+refugia_lim <- readOGR(dsn="shapefiles/limits", layer = "refugio_limite_conforme_decreto")
+esec_lim <- readOGR(dsn="shapefiles/limits", layer = "esec__limite_conforme_decreto")
+
+# CRS Projection
+crs_projection <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
+coord <-  pts_coordenates
+coordenates_loc <- cbind(coord$lon, coord$lat)
+
+prj.coord <- project(coordenates_loc, proj = crs_projection)
+coord <- cbind (prj.coord, coord)
+names (coord)[1:2] <- c("X.prj", "Y.prj")
+coord$COVID19 <- NA
+coord$COVID19 <- ifelse(coord$year <=2019, "Before", coord$COVID19)
+coord$COVID19 <- ifelse(coord$year >2019, "Current", coord$COVID19)
+
+alcatrazes_map_proj <- spTransform(alcatrazes_map, CRSobj = crs_projection) 
+refugia_lim_proj <- spTransform(refugia_lim, CRSobj = crs_projection) 
+esec_lim_proj <- spTransform(esec_lim, CRSobj = crs_projection) 
+
+library("RColorBrewer")
+vessel_type <- ddply (data,. (Id_infraction, vessel), summarise, presence=sum(presence))
+vessel_type$vessel <- gsub("recreationalboat", "Amateur", vessel_type$vessel)
+vessel_type$vessel <- gsub("fishingvessel", "Professional", vessel_type$vessel)
+vessel_type <- vessel_type [,1:2]
+
+coord <- left_join(coord, vessel_type)
+rm (vessel_type)
+
+library (ggspatial)
+Alcatrazes_map <- ggplot () +
+  geom_polygon(data=refugia_lim_proj, aes(long,lat, group=group), color="black", fill="#8C96C6", size=0.25, linetype=2) +
+  geom_polygon(data=esec_lim_proj, aes(long,lat, group=group), color="black", fill="#FEB24C", size=0.25) +
+  lims(x=c(-45.9, -45.2), y=c(-24.9,-24)) +
+  labs(x="Longitude",y="Latitude")+
+  geom_point(inherit.aes = FALSE, 
+             data = as.data.frame(coord),
+             mapping = aes(x = X.prj, 
+                           y = Y.prj, fill = vessel,
+                           shape = factor(COVID19)),
+             size = 2.5)+
+  scale_fill_manual(name = "vessel", values=c("#01579B", "#FEB24C"),
+                    breaks = c("Amateur","Professional")) +
+  scale_shape_manual(values = c("Before" = 21, "Current" = 23)) +
+  geom_polygon(data=alcatrazes_map_proj, aes(long,lat, group=group), color="black", fill="darkgreen", size=0.25) +
+  coord_equal() +
+  annotation_scale()+
+  annotation_north_arrow(location = "bl", which_north = "true", 
+                         pad_x = unit(0.03, "in"), pad_y = unit(0.3, "in"),
+                         style = north_arrow_fancy_orienteering)+
+  theme_light()+
+  theme (axis.text.y   = element_text(size=11, angle=0, family = "sans"),
+         axis.title.y  = element_text(size=15, angle=90, family = "sans"),
+         axis.text.x   = element_text(size=11, angle=0, family = "sans"),
+         axis.title.x  = element_text(size=15, angle=0, family = "sans"),
+         legend.position = "none", 
+         legend.title = element_text(colour="black", size=10, face="bold"),
+         legend.background = element_blank(),
+         panel.background = element_rect(fill = "aliceblue"),
+         panel.grid.major = element_line(color = gray(0.5), 
+                                         linetype = "dashed", size = 0.05))
+Alcatrazes_map
+
+library(geobr)
+library (sf)
+
+states <- read_state(code_state = "all", year=2019)
+spaulo <- read_state(code_state = "SP", year = 2019)
+
+# South America map
+library (maps)
+south_amer_map <- borders("world", regions = c("Brazil", "Uruguay", "Argentina", "French Guiana", "Suriname", "Colombia", "Venezuela",
+                                               "Bolivia", "Ecuador", "Chile", "Paraguay", "Peru", "Guyana", "Panama"), 
+                          fill = "grey70", colour = "grey70")
+
+SAmerica <-  ggplot() + 
+  xlim(-90,-30)+
+  south_amer_map + 
+  geom_sf(data=states, fill="#2D3E50", color="#2D3E50", size=.15, 
+          show.legend = FALSE)+
+  geom_sf(data = spaulo, fill=NA, color="#FEBF57", size=.2) +
+  theme_classic2() + 
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.y   = element_text(size=11, angle=0, family = "sans"),
+        axis.title.y  = element_blank(),
+        axis.text.x   = element_text(size=11, angle=0, family = "sans"),
+        axis.title.x  = element_blank())
+
+
 # Models ---------------------------------------------------------
 library (dplyr)
 values_metrics <- ddply (data,. (year, Id_infraction, vessel, mpa_area), summarise,
