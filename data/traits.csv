@@ -1,4 +1,4 @@
-family;genus;name;taxa;body_mass;diet;size_group;mobility;position;thermoregulation;IUCN_status
+family;genus;name;taxa;body_size;diet;size_group;mobility;position;thermoregulation;IUCN_status
 haemulidae;anisotremus;anisotremus surinamensis;fish;76;im;smallg;mob;pelagic;ectotherms;lc
 haemulidae;anisotremus;anisotremus virginicus;fish;40,6;im;smallg;mob;pelagic;ectotherms;lc
 scombridae;auxis;auxis sp;fish;65;fc;medg;vmob;pelagic;ectotherms;lc
