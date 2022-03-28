@@ -24,8 +24,7 @@ Pimiento C, Leprieur F, Silvestro D, Lefcheck J, Albouy C, Rasher DB, Davis M, S
 
 ## Data
 Data are provided in the form of comma-separated values files (csv).
-.. image:: https://zenodo.org/badge/475008638.svg
-   :target: https://zenodo.org/badge/latestdoi/475008638
+https://zenodo.org/badge/475008638.svg
 
 If you use any dataset please cite the article above and the original reference for the data 
 set as described below.
