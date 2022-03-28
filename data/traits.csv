@@ -1,0 +1,40 @@
+family;genus;name;taxa;body_mass;diet;size_group;mobility;position;thermoregulation;IUCN_status
+haemulidae;anisotremus;anisotremus surinamensis;fish;76;im;smallg;mob;pelagic;ectotherms;lc
+haemulidae;anisotremus;anisotremus virginicus;fish;40,6;im;smallg;mob;pelagic;ectotherms;lc
+scombridae;auxis;auxis sp;fish;65;fc;medg;vmob;pelagic;ectotherms;lc
+carangidae;caranx;caranx crysos;fish;70;fc;largeg;vmob;pelagic;ectotherms;lc
+carangidae;caranx;caranx sp;fish;80;fc;smallg;vmob;pelagic;ectotherms;lc
+carcharhinidae;carcharhinus;carcharhinus brevipinna;elasmobranchii;210;fc;sol;vmob;pelagic;endothermic;vu
+ephippidae;chaetodipterus;chaetodipterus faber;fish;91;im;largeg;vmob;pelagic;ectotherms;lc
+cheloniidae;chelonia;chelonia mydas;turtle;200;hd;sol;vmob;pelagic;ectotherms;en
+sparidae;diplodus;diplodus argenteus;fish;37,8;om;smallg;mob;pelagic;ectotherms;lc
+elopidae;elops;elops saurus;fish;100;fc;largeg;vmob;pelagic;ectotherms;lc
+serranidae;epinephelus;epinephelus marginatus;fish;150;im;sol;mob;benthic;ectotherms;vu
+ariidae;genidens;genidens barbus;fish;41,5;om;sol;sed;benthic;ectotherms;ne
+holocentridae;holocentrus;holocentrus adscensionis;fish;61;im;sol;sed;pelagic;ectotherms;lc
+kyphosidae;kyphosus;kyphosus sp;fish;39;hm;medg;mob;pelagic;ectotherms;lc
+lutjanidae;lutjanus;lutjanus analis;fish;94;im;smallg;mob;pelagic;ectotherms;nt
+sciaenidae;micropogonias;micropogonias furnieri;fish;30,6;im;medg;mob;benthic;ectotherms;lc
+haemulidae;orthopristis;orthopristis ruber;fish;40;im;medg;mob;pelagic;ectotherms;lc
+sparidae;pagrus;pagrus pagrus;fish;91;im;smallg;mob;pelagic;ectotherms;lc
+pomatomidae;pomatomus;pomatomus saltatrix;fish;30;im;smallg;mob;pelagic;ectotherms;vu
+carcharhinidae;rhizoprionodon;rhizoprionodon lalandii;elasmobranchii;61,8;fc;sol;vmob;pelagic;endothermic;dd
+lutjanidae;rhomboplites;rhomboplites aurorubens;fish;60;im;medg;mob;pelagic;ectotherms;vu
+carangidae;selene;selene vomer;fish;48,3;im;medg;vmob;pelagic;ectotherms;lc
+carangidae;seriola;seriola dumerili;fish;190;fc;smallg;vmob;pelagic;ectotherms;lc
+carangidae;seriola;seriola rivoliana;fish;160;fc;smallg;vmob;pelagic;ectotherms;lc
+carangidae;trachinotus;trachinotus goodei;fish;50;im;medg;vmob;pelagic;ectotherms;lc
+carangidae;uraspis;uraspis secunda;fish;50;im;smallg;vmob;benthic;ectotherms;lc
+phycidae;urophycs;urophycis sp;fish;52,2;im;smallg;mob;benthic;ectotherms;ne
+coryphaenidae;coryphaena;coryphaena_hippurus;fish;210;fc;sol;vmob;pelagic;ectotherms;lc
+carcharhinidae;carcharhinus;carcharhinus_falciformes;elasmobranchii;350;fc;sol;vmob;pelagic;endothermic;vu
+sphyrnidae;sphyrna;sphyrna_lewini;elasmobranchii;430;fc;medg;vmob;pelagic;endothermic;cr
+labridae;sparisoma;sparisoma_amplum;fish;40;hd;smallg;mob;benthic;ectotherms;lc
+muraenidae;gymnothorax;gymnothorax_moringa;fish;200;fc;sol;mob;benthic;ectotherms;lc
+sphyrnidae;sphyrna;sphyrna_zygaena;elasmobranchii;265;fc;largeg;vmob;pelagic;endothermic;vu
+carcharhinidae;rhizoprionodon;rhizoprionodon_porosus;elasmobranchii;80;fc;sol;vmob;pelagic;endothermic;lc
+fistulariidae;fistularia;fistularia_tabacari;fish;200;im;sol;mob;pelagic;ectotherms;lc
+priacanthidae;priacanthus;priacanthus_arenatus;fish;50;im;smallg;mob;pelagic;ectotherms;lc
+scombridae;katsuwonus;katsuwonus_pelamis;fish;110;fc;largeg;vmob;pelagic;ectotherms;lc
+myliobatidae;myliobatis;myliobatis_freminvillei;elasmobranchii;100;im;smallg;vmob;pelagic;ectotherms;dd
+gymnuridae;gymnura;gymnura_altavela;elasmobranchii;200;im;sol;mob;benthic;ectotherms;vu
